@@ -11,13 +11,13 @@ from sklearn.cluster import KMeans
 
 class saveImage:
 
-	def save(self , features , image_path):
+	def save(self , features , image_path , token):
 		for i in range(500):
 
 			name = image_path + "/image_" + str(i) + ".jpg"
 			im = Image.fromarray(features[i])
 			im.save(name)
-		print("----All images saved----")
+		print("[Success] All" , str(token), "images are saved.....")
 
 		return im
 
@@ -29,12 +29,12 @@ class FileHelper:
 		count =0
 
 		for each in glob(path + "*.jpg"):
-			image = each.split("\\")[-1]
+			#image = each.split("\\")[-1]
 			
-			im = cv2.imread(image)
-			imlist.append(image)
+			im = cv2.imread(each)
+			imlist.append(im)
 			count+=1
-		print(" ---- Reading Images complete----")
+		print("[Success] Reading Images complete.....")
 		return imlist,count
 
 
@@ -73,13 +73,13 @@ class BovHelper:
 		self.KMeans_ret = self.KMeans_obj.fit_predict(self.descriptor_vstack)
 
 
-	def developVocabulory(self , n_images , descriptors_list , KMeans_ret=None):
+	def developVocabulory(self , n_images , descriptor_list , KMeans_ret=None):
 		
 		self.mega_histogram = np.array([np.zeros(self.n_clusters) for i in range(n_images)])
 		old_count=0
 
 		for i in range(n_images):
-			l=len(descriptors_list[i])
+			l=len(descriptor_list[i])
 			for j in range(l):
 				if KMeans_ret is None:
 					idx = self.KMeans_ret[old_count+j]
@@ -92,13 +92,25 @@ class BovHelper:
 
 
 
-	def formatND(self):
-		
+	def formatND(self , l):
+	
 		vStack = np.array(l[0])
-		for remain in l[1:]:
-			vStack = np.vstack((vStack , remain))
+		for i in range(1,305):
+			v = np.vstack((vStack , l[i]))
+			vStack =v
 		self.descriptor_vstack = vStack.copy()
+		print("[Success] stack creates ....")
 		return vStack
+
+	def standardize(self , std=None):
+
+		if std is None:
+			self.scale = StandardScaler().fit(self.mega_histogram)
+			self.mega_histogram = self.scale.transform(self.mega_histogram)
+
+		else:
+			print("STD is not none external std supplied")
+			self.mega_histogram = std.transform(self.mega_histogram)
 
 
 

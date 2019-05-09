@@ -72,16 +72,18 @@ if __name__ == "__main__":
 
 	#extracting train data and labels
 	features , labels = unpickle(bov.datapath , 'train')
-	train_images = bov.saveimage.save(features , bov.train_path)
+	train_images = bov.saveimage.save(features , bov.train_path , token='train')
 	#extracting test data and labels
 	test_features , test_labels = unpickle(bov.datapath , 'test')
-	test_images = bov.saveimage.save(test_features , bov.test_path)
+	test_images = bov.saveimage.save(test_features , bov.test_path , token='test')
 
 	#training the model
-	TRAIN(labels, bov.train_path).training()
+	tr=TRAIN(labels[:500], bov.train_path)
+	tr.training()
 
 	#testing the model
-	TEST(bov.test_path).testing()
+	ts=TEST(bov.test_path)
+	ts.testing()
 
 
 	

@@ -12,7 +12,7 @@ class TRAIN:
 		self.count = None
 		self.filehelper = FileHelper()
 		self.img_helper = imageHelpers()
-		self.descriptor_list = None
+		self.descriptor_list = []
 		self.bov_helper = BovHelper()
 		self.train_labels = labels
 		self.trainpath = trainpath
@@ -28,7 +28,8 @@ class TRAIN:
 			self.descriptor_list.append(des)
 
 		#perform clustering
-
+		print("[INFO] the shape of list",len(self.descriptor_list))
+		print("[INFO] the type of list" ,type(self.descriptor_list))
 		bov_descriptor_stack = self.bov_helper.formatND(self.descriptor_list)
 		self.bov_helper.cluster()
 		self.bov_helper.developVocabulory(n_images=self.count , descriptor_list=self.descriptor_list)

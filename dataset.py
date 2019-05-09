@@ -21,7 +21,7 @@ def unpickle(path , token):
 	labels = d[b'labels']
 	filename = d[b'filenames']
 
-	return features, labels
+	return features, labels[:500]
 
 
 
